@@ -1,12 +1,55 @@
-streamlit
-langchain
-langchain-community
-langchain-groq
-langchain-text-splitters
-faiss-cpu
-pypdf
-beautifulsoup4
-lxml
-python-dotenv
-sentence-transformers
-torch
+# ─────────────────────────────────────────────────────────────
+#  requirements.txt — AI Research Paper Analyzer
+#  Industry-Standard RAG Pipeline with Multi-Format Support
+# ─────────────────────────────────────────────────────────────
+#  Install: pip install -r requirements.txt
+# ─────────────────────────────────────────────────────────────
+
+# ── Core Web Framework ───────────────────────────────────────
+streamlit>=1.35.0
+
+# ── LangChain Ecosystem ──────────────────────────────────────
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-groq>=0.1.6
+langchain-text-splitters>=0.2.0
+langchain-huggingface>=0.0.3
+
+# ── LLM Provider ─────────────────────────────────────────────
+groq>=0.9.0
+
+# ── Vector Store ─────────────────────────────────────────────
+faiss-cpu>=1.7.4
+
+# ── Embeddings (local, no API cost) ──────────────────────────
+sentence-transformers>=2.7.0
+torch>=2.0.0
+
+# ── PDF Processing ───────────────────────────────────────────
+pypdf>=4.0.0
+pdfplumber>=0.11.0           # Better layout extraction for dense research papers
+pdf2image>=1.17.0             # Scanned PDF → image (for OCR pipeline)
+
+# ── Image OCR ────────────────────────────────────────────────
+pytesseract>=0.3.10           # Python wrapper for Tesseract OCR engine
+Pillow>=10.0.0                # Image preprocessing
+
+# ── URL Scraping ─────────────────────────────────────────────
+trafilatura>=1.8.0            # Best-in-class article extractor
+beautifulsoup4>=4.12.0        # HTML parsing fallback
+lxml>=5.0.0                   # Fast XML/HTML parser
+
+# ── Document Formats ─────────────────────────────────────────
+python-docx>=1.1.0            # Word document parser
+pandas>=2.0.0                 # CSV/tabular data processing
+
+# ── Utilities ────────────────────────────────────────────────
+python-dotenv>=1.0.0          # Load .env API keys
+requests>=2.31.0              # HTTP requests
+
+# ─────────────────────────────────────────────────────────────
+#  NOTE: Tesseract OCR binary must also be installed separately
+#  Windows: https://github.com/UB-Mannheim/tesseract/wiki
+#  Ubuntu:  sudo apt-get install tesseract-ocr
+#  macOS:   brew install tesseract
+# ─────────────────────────────────────────────────────────────
