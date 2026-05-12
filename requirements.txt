@@ -1,55 +1,42 @@
-# ─────────────────────────────────────────────────────────────
-#  requirements.txt — AI Research Paper Analyzer
-#  Industry-Standard RAG Pipeline with Multi-Format Support
-# ─────────────────────────────────────────────────────────────
-#  Install: pip install -r requirements.txt
-# ─────────────────────────────────────────────────────────────
+# requirements.txt — AI Research Paper Analyzer v3.0
+# Architecture: FastAPI Backend + React Frontend
 
-# ── Core Web Framework ───────────────────────────────────────
-streamlit>=1.35.0
+# ── Backend Framework ────────────────────────────────────────
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
 
-# ── LangChain Ecosystem ──────────────────────────────────────
+# ── LangChain ────────────────────────────────────────────────
 langchain>=0.2.0
 langchain-community>=0.2.0
 langchain-groq>=0.1.6
 langchain-text-splitters>=0.2.0
 langchain-huggingface>=0.0.3
-
-# ── LLM Provider ─────────────────────────────────────────────
 groq>=0.9.0
 
-# ── Vector Store ─────────────────────────────────────────────
+# ── Vector Stores ────────────────────────────────────────────
 faiss-cpu>=1.7.4
+pinecone-client>=5.0.0
 
-# ── Embeddings (local, no API cost) ──────────────────────────
+# ── Sparse Retrieval ────────────────────────────────────────
+rank-bm25>=0.2.2
+
+# ── Embeddings + Reranker ────────────────────────────────────
 sentence-transformers>=2.7.0
 torch>=2.0.0
 
-# ── PDF Processing ───────────────────────────────────────────
+# ── Document Processing ─────────────────────────────────────
 pypdf>=4.0.0
-pdfplumber>=0.11.0           # Better layout extraction for dense research papers
-pdf2image>=1.17.0             # Scanned PDF → image (for OCR pipeline)
-
-# ── Image OCR ────────────────────────────────────────────────
-pytesseract>=0.3.10           # Python wrapper for Tesseract OCR engine
-Pillow>=10.0.0                # Image preprocessing
+pdfplumber>=0.11.0
 
 # ── URL Scraping ─────────────────────────────────────────────
-trafilatura>=1.8.0            # Best-in-class article extractor
-beautifulsoup4>=4.12.0        # HTML parsing fallback
-lxml>=5.0.0                   # Fast XML/HTML parser
-
-# ── Document Formats ─────────────────────────────────────────
-python-docx>=1.1.0            # Word document parser
-pandas>=2.0.0                 # CSV/tabular data processing
+trafilatura>=1.8.0
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
 
 # ── Utilities ────────────────────────────────────────────────
-python-dotenv>=1.0.0          # Load .env API keys
-requests>=2.31.0              # HTTP requests
-
-# ─────────────────────────────────────────────────────────────
-#  NOTE: Tesseract OCR binary must also be installed separately
-#  Windows: https://github.com/UB-Mannheim/tesseract/wiki
-#  Ubuntu:  sudo apt-get install tesseract-ocr
-#  macOS:   brew install tesseract
-# ─────────────────────────────────────────────────────────────
+python-dotenv>=1.0.0
+requests>=2.31.0
+numpy>=1.24.0
+pydantic>=2.7.0
+httpx>=0.27.0
