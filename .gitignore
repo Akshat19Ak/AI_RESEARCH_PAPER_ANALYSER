@@ -104,5 +104,6 @@ Thumbs.db
 # Contains personal draft docs/resume/latex working files that are not part of application source.
 temp/
 RAG_LEARNINGS_CLAUDE/
+deployment/
 
 

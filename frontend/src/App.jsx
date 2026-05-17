@@ -2,12 +2,21 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import * as api from './api'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import mermaid from 'mermaid'
 
-mermaid.initialize({ startOnLoad: false, theme: 'dark', themeVariables: {
-  primaryColor: '#6366f1', primaryTextColor: '#f1f5f9', primaryBorderColor: '#4f46e5',
-  lineColor: '#64748b', secondaryColor: '#1e1b4b', tertiaryColor: '#0c0c14',
-}})
+let mermaidPromise = null
+
+async function loadMermaid() {
+  if (!mermaidPromise) {
+    mermaidPromise = import('mermaid').then(({ default: mermaid }) => {
+      mermaid.initialize({ startOnLoad: false, theme: 'dark', themeVariables: {
+        primaryColor: '#6366f1', primaryTextColor: '#f1f5f9', primaryBorderColor: '#4f46e5',
+        lineColor: '#64748b', secondaryColor: '#1e1b4b', tertiaryColor: '#0c0c14',
+      }})
+      return mermaid
+    })
+  }
+  return mermaidPromise
+}
 
 /* ── Hooks ────────────────────────────────────── */
 function useLoadingMessage(loading, messages, interval = 2500) {
@@ -258,10 +267,20 @@ function FlowchartTab({ sid, apiKey }) {
   }
 
   useEffect(() => {
-    if (!mermaidCode || !ref.current) return
-    ref.current.innerHTML = ''
-    mermaid.render('mermaid-chart', mermaidCode).then(({ svg }) => { ref.current.innerHTML = svg })
-      .catch(() => { ref.current.innerHTML = `<pre style="color:var(--text-2);font-size:0.85rem;">${mermaidCode}</pre>` })
+    let cancelled = false
+    const renderMermaid = async () => {
+      if (!mermaidCode || !ref.current) return
+      ref.current.innerHTML = ''
+      try {
+        const mermaid = await loadMermaid()
+        const { svg } = await mermaid.render('mermaid-chart', mermaidCode)
+        if (!cancelled && ref.current) ref.current.innerHTML = svg
+      } catch {
+        if (!cancelled && ref.current) ref.current.innerHTML = `<pre style="color:var(--text-2);font-size:0.85rem;">${mermaidCode}</pre>`
+      }
+    }
+    renderMermaid()
+    return () => { cancelled = true }
   }, [mermaidCode])
 
   return (
