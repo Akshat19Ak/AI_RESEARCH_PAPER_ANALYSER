@@ -107,3 +107,5 @@ RAG_LEARNINGS_CLAUDE/
 deployment/
 
 
+# added deployment/ to ignore the deployment folder which contains personal notes and drafts related to deployment strategies and learnings, not meant for version control.
+deployment/
