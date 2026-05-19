@@ -2,6 +2,8 @@
 AI Research Paper Analyzer — Streamlit Frontend
 Calls FastAPI backend at localhost:8000 for all RAG operations.
 """
+# app.py - Streamlit frontend for AI Research Paper Analyzer
+
 import os, streamlit as st, httpx
 from datetime import datetime
 
