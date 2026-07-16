@@ -16,7 +16,7 @@ HOW IT WORKS:
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from src.utils.config import CHUNK_SIZE, CHUNK_OVERLAP, CHUNK_SEPARATORS
+from backend.src.utils.config import CHUNK_SIZE, CHUNK_OVERLAP, CHUNK_SEPARATORS
 
 
 def chunk_text(text: str, metadata: dict) -> list[Document]:

@@ -20,7 +20,7 @@ WHY FAISS (not Pinecone, ChromaDB, etc.):
 
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
-from src.retrieval.embeddings import get_embeddings
+from backend.src.retrieval.embeddings import get_embeddings
 
 
 def build_vector_store(docs: list[Document]) -> FAISS:

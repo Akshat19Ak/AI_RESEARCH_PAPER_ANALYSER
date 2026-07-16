@@ -25,9 +25,9 @@ PIPELINE:
 
 from langchain_core.documents import Document
 from langchain_community.vectorstores import FAISS
-from src.retrieval.bm25_store import BM25Store
-from src.retrieval.vector_store import dense_search
-from src.utils.config import RETRIEVAL_TOP_K, HYBRID_ALPHA
+from backend.src.retrieval.bm25_store import BM25Store
+import backend.src.retrieval.vector_store as vector_store_mod
+from backend.src.utils.config import RETRIEVAL_TOP_K, HYBRID_ALPHA
 
 
 def hybrid_search(
@@ -55,7 +55,7 @@ def hybrid_search(
         Merged list of Document chunks, ranked by combined relevance.
     """
     # ── Step 1: Get results from both retrievers ────────────────────────
-    dense_results = dense_search(vectorstore, query, k=k)
+    dense_results = vector_store_mod.dense_search(vectorstore, query, k=k)
     sparse_results = bm25_store.search(query, k=k)
 
     # ── Step 2: Apply Reciprocal Rank Fusion ────────────────────────────

@@ -95,14 +95,14 @@ source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 
 # Configure environment
 cp .env.example .env
 # Edit .env with your Groq API Key
 
 # Start the server
-python -m uvicorn api.server:app --reload --port 8000
+python -m uvicorn backend.api.server:app --reload --port 8000
 ```
 
 ### 2. Frontend Setup
@@ -120,6 +120,7 @@ Open **[http://localhost:5173](http://localhost:5173)** to start analyzing.
 The project is fully containerized and ready for production deployment.
 
 ```bash
+cd deployment
 docker-compose up --build
 ```
 - **Frontend:** http://localhost:3000

@@ -20,12 +20,12 @@ MODEL: cross-encoder/ms-marco-MiniLM-L-6-v2
     - Part of the sentence-transformers library (already installed)
 """
 
-import streamlit as st
+import functools
 from langchain_core.documents import Document
-from src.utils.config import RERANKER_MODEL, FINAL_TOP_K
+from backend.src.utils.config import RERANKER_MODEL, FINAL_TOP_K
 
 
-@st.cache_resource(show_spinner=False)
+@functools.lru_cache(maxsize=1)
 def get_reranker():
     """
     Load and cache the cross-encoder reranker model (lazy singleton).

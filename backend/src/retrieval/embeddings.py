@@ -14,19 +14,19 @@ WHY MiniLM-L6-v2:
     - Used in production by many RAG systems
 """
 
-import streamlit as st
+import functools
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from src.utils.config import EMBEDDING_MODEL, EMBEDDING_DEVICE
+from backend.src.utils.config import EMBEDDING_MODEL, EMBEDDING_DEVICE
 
 
-@st.cache_resource(show_spinner=False)
+@functools.lru_cache(maxsize=1)
 def get_embeddings() -> HuggingFaceEmbeddings:
     """
     Load and cache the embedding model (singleton pattern).
 
-    @st.cache_resource ensures the model is loaded ONCE and reused
-    across all Streamlit reruns. Without this, the 23MB model would
-    reload on every button click (~3 seconds wasted each time).
+    @functools.lru_cache ensures the model is loaded ONCE and reused
+    across all calls. Without this, the 23MB model would reload on
+    every invocation (~3 seconds wasted each time).
 
     Returns:
         HuggingFaceEmbeddings instance ready for encoding.

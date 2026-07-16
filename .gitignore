@@ -1,7 +1,9 @@
+# ── Secrets ────────────────────────────────────────────────────
 .env
 .env.*
 !.env.example
 
+# ── Python virtual environments ────────────────────────────────
 venv/
 .venv/
 env/
@@ -9,43 +11,56 @@ ENV/
 **/venv/
 **/.venv/
 
+# ── Python bytecode ───────────────────────────────────────────
 __pycache__/
 **/__pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 
+# ── Python tooling cache ─────────────────────────────────────
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .ipynb_checkpoints/
 
-
+# ── Vector store artifacts ────────────────────────────────────
 faiss_index/
 vector_db/
 *.faiss
 *.index
 *.pkl
 
+# ── Build / logs ──────────────────────────────────────────────
 *.log
 logs/
 build/
 dist/
 *.egg-info/
 .eggs/
+
+# ── IDE / editor ─────────────────────────────────────────────
 .vscode/
-
-
 .idea/
 *.swp
 *.swo
 *~
+
+# ── OS files ──────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
+# ── Streamlit cache ──────────────────────────────────────────
 .streamlit/
-temp/
-RAG_LEARNINGS_CLAUDE/
 
-deployment/
-.gitignoreexample
+# ── Frontend build artifacts ─────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+
+# ── Streamlit cache ──────────────────────────────────────────
+streamlit/__pycache__/
+
+# ── Personal notes (not for public repo) ─────────────────────
+notes/temp/
+notes/deployment/
+notes/RAG_LEARNINGS_CLAUDE/

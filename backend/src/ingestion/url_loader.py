@@ -40,7 +40,7 @@ def load_url(url: str) -> tuple[str, dict]:
     # This prevents scraping binary junk as HTML.
     if url.lower().split("?")[0].endswith(".pdf") or "arxiv.org/pdf/" in url.lower():
         import requests
-        from src.ingestion.pdf_loader import load_pdf
+        from backend.src.ingestion.pdf_loader import load_pdf
         try:
             headers = {"User-Agent": "Mozilla/5.0"}
             response = requests.get(url, headers=headers, timeout=15)

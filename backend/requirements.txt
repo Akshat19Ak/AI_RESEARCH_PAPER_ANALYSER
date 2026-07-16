@@ -16,7 +16,7 @@ groq>=0.9.0
 
 # ── Vector Stores ────────────────────────────────────────────
 faiss-cpu>=1.7.4
-pinecone-client>=5.0.0
+pinecone>=5.0.0
 
 # ── Sparse Retrieval ────────────────────────────────────────
 rank-bm25>=0.2.2

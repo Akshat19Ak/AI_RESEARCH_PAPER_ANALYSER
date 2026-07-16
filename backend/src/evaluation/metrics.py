@@ -23,8 +23,8 @@ WHY THIS MATTERS FOR YOUR RESUME:
 
 import numpy as np
 from langchain_core.documents import Document
-from src.retrieval.embeddings import get_embeddings
-from src.utils.config import FAITHFULNESS_THRESHOLD
+from backend.src.retrieval.embeddings import get_embeddings
+from backend.src.utils.config import FAITHFULNESS_THRESHOLD
 
 
 def compute_all_metrics(

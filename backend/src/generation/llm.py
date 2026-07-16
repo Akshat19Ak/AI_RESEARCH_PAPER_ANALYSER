@@ -14,7 +14,7 @@ TEMPERATURE = 0.2:
 """
 
 from langchain_groq import ChatGroq
-from src.utils.config import LLM_MODEL, LLM_TEMPERATURE, LLM_MAX_TOKENS
+from backend.src.utils.config import LLM_MODEL, LLM_TEMPERATURE, LLM_MAX_TOKENS
 
 
 def get_llm(api_key: str, temperature: float = None) -> ChatGroq:

@@ -12,11 +12,11 @@ This is the "brain" of the RAG pipeline — where retrieval meets generation.
 
 from langchain_core.documents import Document
 from langchain_community.vectorstores import FAISS
-from src.retrieval.bm25_store import BM25Store
-from src.retrieval.hybrid_retriever import hybrid_search
-from src.retrieval.reranker import rerank
-from src.utils.helpers import format_context, format_history
-from src.generation.prompts import (
+from backend.src.retrieval.bm25_store import BM25Store
+from backend.src.retrieval.hybrid_retriever import hybrid_search
+from backend.src.retrieval.reranker import rerank
+from backend.src.utils.helpers import format_context, format_history
+from backend.src.generation.prompts import (
     STRUCTURED_SUMMARY_PROMPT,
     CHAT_PROMPT,
     QUICK_INSIGHTS_PROMPT,

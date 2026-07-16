@@ -19,7 +19,7 @@ WHY IN-MEMORY (not a database):
 import uuid
 from dataclasses import dataclass, field
 from langchain_community.vectorstores import FAISS
-from src.retrieval.bm25_store import BM25Store
+from backend.src.retrieval.bm25_store import BM25Store
 
 
 @dataclass

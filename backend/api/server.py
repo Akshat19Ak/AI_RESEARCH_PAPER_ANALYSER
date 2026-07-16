@@ -31,27 +31,27 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from api.models import (
+from backend.api.models import (
     URLUploadRequest, ChatRequest, SummaryRequest, InsightsRequest,
     DeepDiveRequest, InterviewRequest, CompareRequest,
     UploadResponse, AnalysisResponse, ChatResponse, CompareResponse,
     MetricsResponse, HealthResponse, SourceChunk,
 )
-from api.session_manager import sessions
+from backend.api.session_manager import sessions
 
-from src.utils.config import VECTOR_STORE_TYPE, PINECONE_API_KEY, PINECONE_NAMESPACE_PREFIX
-from src.utils.helpers import file_hash, clean_text
-from src.ingestion.pdf_loader import load_pdf
-from src.ingestion.url_loader import load_url
-from src.ingestion.chunker import chunk_text
-from src.retrieval.vector_store import build_vector_store
-from src.retrieval.bm25_store import BM25Store
-from src.generation.llm import get_llm
-from src.generation.chains import (
+from backend.src.utils.config import VECTOR_STORE_TYPE, PINECONE_API_KEY, PINECONE_NAMESPACE_PREFIX
+from backend.src.utils.helpers import file_hash, clean_text
+from backend.src.ingestion.pdf_loader import load_pdf
+from backend.src.ingestion.url_loader import load_url
+from backend.src.ingestion.chunker import chunk_text
+from backend.src.retrieval.vector_store import build_vector_store
+from backend.src.retrieval.bm25_store import BM25Store
+from backend.src.generation.llm import get_llm
+from backend.src.generation.chains import (
     run_structured_summary, run_chat, run_quick_insights,
     run_section_dive, run_interview_prep, run_comparison,
 )
-from src.evaluation.metrics import compute_all_metrics
+from backend.src.evaluation.metrics import compute_all_metrics
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  APP SETUP
@@ -127,7 +127,7 @@ def _build_indices(chunks, session_id: str):
     bm25 = BM25Store(chunks)
 
     if _use_pinecone():
-        from src.retrieval.pinecone_store import upsert_to_pinecone
+        from backend.src.retrieval.pinecone_store import upsert_to_pinecone
         namespace = f"{PINECONE_NAMESPACE_PREFIX}{session_id}"
         upsert_to_pinecone(chunks, namespace, api_key=_get_pinecone_key())
         vectorstore = None  # Pinecone handles dense search
@@ -140,23 +140,6 @@ def _build_indices(chunks, session_id: str):
 # ══════════════════════════════════════════════════════════════════════════════
 #  ENDPOINT: Health Check
 # ══════════════════════════════════════════════════════════════════════════════
-
-@app.delete("/session/{session_id}", tags=["System"])
-async def delete_session(session_id: str):
-    try:
-        session = sessions.get(session_id)
-        if session.use_pinecone:
-            from src.retrieval.pinecone_store import get_pinecone_index
-            from src.utils.config import PINECONE_API_KEY
-            pc_key = PINECONE_API_KEY
-            if pc_key:
-                index = get_pinecone_index(pc_key)
-                namespace = f"{PINECONE_NAMESPACE_PREFIX}{session_id}"
-                index.delete(delete_all=True, namespace=namespace)
-        sessions.delete(session_id)
-        return {"status": "deleted"}
-    except KeyError:
-        return {"status": "not_found"}
 
 @app.get("/health", response_model=HealthResponse, tags=["System"])
 async def health_check():
@@ -296,8 +279,8 @@ def _run_with_retrieval(session, llm, chain_fn, *args):
 
     if ns:
         # Pinecone mode: patch dense_search to use Pinecone
-        from src.retrieval import pinecone_store
-        import src.retrieval.vector_store as vs_mod
+        from backend.src.retrieval import pinecone_store
+        import backend.src.retrieval.vector_store as vs_mod
         original_dense = vs_mod.dense_search
 
         def pinecone_dense(vectorstore, query, k=10):
@@ -422,8 +405,8 @@ async def compare_papers(req: CompareRequest):
         llm = get_llm(api_key)
         vs, bm25, ns = _get_retrieval_stores(session)
         if ns:
-            from src.retrieval import pinecone_store
-            import src.retrieval.vector_store as vs_mod
+            from backend.src.retrieval import pinecone_store
+            import backend.src.retrieval.vector_store as vs_mod
             original = vs_mod.dense_search
             def pc_dense(vectorstore, query, k=10):
                 return pinecone_store.pinecone_search(query, ns, k=k, api_key=_get_pinecone_key())
@@ -485,11 +468,11 @@ async def generate_flowchart(req: FlowchartRequest):
         query = "methodology architecture pipeline approach system design workflow"
 
         if ns:
-            from src.retrieval import pinecone_store
+            from backend.src.retrieval import pinecone_store
             docs = pinecone_store.pinecone_search(query, ns, k=8, api_key=_get_pinecone_key())
         else:
-            from src.retrieval.hybrid_retriever import hybrid_search
-            from src.retrieval.reranker import rerank
+            from backend.src.retrieval.hybrid_retriever import hybrid_search
+            from backend.src.retrieval.reranker import rerank
             docs = hybrid_search(vs, bm25, query, k=10)
             docs = rerank(query, docs, top_k=6)
 
@@ -548,7 +531,7 @@ async def delete_session(session_id: str):
     try:
         session = sessions.get(session_id)
         if getattr(session, "use_pinecone", False):
-            from src.retrieval.pinecone_store import delete_pinecone_namespace
+            from backend.src.retrieval.pinecone_store import delete_pinecone_namespace
             delete_pinecone_namespace(
                 f"{PINECONE_NAMESPACE_PREFIX}{session_id}",
                 api_key=_get_pinecone_key(),

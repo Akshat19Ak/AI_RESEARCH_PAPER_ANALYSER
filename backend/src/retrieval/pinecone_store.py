@@ -16,7 +16,7 @@ ARCHITECTURE:
 
 import os
 from langchain_core.documents import Document
-from src.retrieval.embeddings import get_embeddings
+from backend.src.retrieval.embeddings import get_embeddings
 
 
 def get_pinecone_index(api_key: str = None, index_name: str = None):
