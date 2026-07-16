@@ -3,7 +3,7 @@ services:
     name: researchlens-api
     runtime: python
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: uvicorn backend.api.server:app --host 0.0.0.0 --port $PORT --workers 1
+    startCommand: bash backend/server.sh
     envVars:
       - key: GROQ_API_KEY
         sync: false

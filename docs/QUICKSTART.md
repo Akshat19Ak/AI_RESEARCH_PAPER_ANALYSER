@@ -20,7 +20,7 @@ cd Rag_final
 
 # Create and activate a virtual environment (CRITICAL)
 python -m venv venv
-venv\Scripts\activate          # Windows
+venv\Scripts\activate
 source venv/bin/activate       # Linux/Mac
 
 # Install dependencies
@@ -47,67 +47,17 @@ npm run dev
 
 ---
 
-## 🐳 Docker Guide for Beginners
+## 🐳 Docker Setup (One-Click)
 
-Docker allows you to package an application and all its dependencies into a "container." This guarantees that the application will run exactly the same way on any computer, without the headache of installing Python, Node.js, or configuring environments manually.
-
-### 1. Fix "Cannot find the file specified" Error
-The error you encountered (`The system cannot find the file specified / dockerDesktopLinuxEngine`) means **Docker Desktop is either not installed or not currently running** on your machine.
-
-**To fix this:**
-1. Download [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/).
-2. Install it (leave default settings, ensure WSL 2 backend is selected if prompted).
-3. **Open the "Docker Desktop" app** from your Windows Start Menu. 
-4. Wait for the icon in your system tray (bottom right) to turn green or say "Engine running." **Docker must be open and running in the background for commands to work.**
-
-### 2. Running the Project with Docker
-Once Docker Desktop is running, you can launch the entire project (backend + frontend) with a single command:
+The simplest way to run the entire stack without installing dependencies manually.
 
 ```bash
-# Navigate to the deployment folder
 cd Rag_final/deployment
-
-# Build and start the containers
 docker-compose up --build
 ```
-*(Note: The `--build` flag ensures it builds the latest version of your code. You can drop it on subsequent runs to start faster: `docker-compose up`)*
-
 - **Frontend Dashboard:** http://localhost:3000
 - **Backend API:** http://localhost:8000
 
-To **stop** the servers, press `Ctrl+C` in the terminal, or run:
-```bash
-docker-compose down
-```
-
-### 3. How to Send / Share this App using Docker
-There are two ways to share a Dockerized application:
-
-#### Option A: Sharing the Source Code (Easiest for teams/collaborators)
-Because you have a `Dockerfile` and `docker-compose.yml`, anyone can run your app if they have the code.
-1. Zip the entire `Rag_final` folder (excluding `venv/`, `node_modules/`, `__pycache__` to keep it small).
-2. Send the zip file to your colleague.
-3. Tell them to:
-   - Unzip it
-   - Install and open Docker Desktop
-   - Open a terminal, `cd` into the unzipped `Rag_final/deployment` folder, and run `docker-compose up --build`.
-   - The app will magically work for them, no Python/Node setup required!
-
-#### Option B: Sharing pre-built Images (For end-users)
-If you don't want to share source code, you can build the images and push them to [Docker Hub](https://hub.docker.com) (like GitHub, but for Docker containers).
-1. Create a free Docker Hub account.
-2. Build and tag your images:
-   ```bash
-   docker build -t yourusername/researchlens-backend ./backend
-   docker build -t yourusername/researchlens-frontend ./frontend
-   ```
-3. Push them to the cloud:
-   ```bash
-   docker push yourusername/researchlens-backend
-   docker push yourusername/researchlens-frontend
-   ```
-4. Update `docker-compose.yml` to pull `image: yourusername/researchlens-backend` instead of using `build: ...`
-5. Now, you only need to send someone the `docker-compose.yml` file. When they run `docker-compose up`, it will download the pre-built application directly from Docker Hub!
 ---
 
 ## 🔑 API Key Configuration
