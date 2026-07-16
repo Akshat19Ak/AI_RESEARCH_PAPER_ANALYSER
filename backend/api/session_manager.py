@@ -30,7 +30,6 @@ class Session:
     bm25_store: BM25Store = None
     doc_metadata: dict = field(default_factory=dict)
     doc_chunks: list = field(default_factory=list)
-    raw_text: str = ""
     doc_hash: str = ""
     chat_history: list = field(default_factory=list)
     metrics_history: list = field(default_factory=list)

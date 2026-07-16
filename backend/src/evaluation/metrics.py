@@ -71,7 +71,7 @@ def compute_all_metrics(
     # ── Compute individual metrics ──────────────────────────────────────
     relevance = _answer_relevance(question_emb, answer_emb)
     faith_score, faith_count, total_sents = _faithfulness(
-        answer, chunk_texts, embeddings_model
+        answer, chunk_embs, embeddings_model
     )
     ctx_precision = _context_precision(question_emb, chunk_embs)
 
@@ -123,7 +123,7 @@ def _answer_relevance(question_emb: np.ndarray, answer_emb: np.ndarray) -> float
 
 def _faithfulness(
     answer: str,
-    chunk_texts: list[str],
+    chunk_embs: np.ndarray,
     embeddings_model,
 ) -> tuple[float, int, int]:
     """
@@ -146,15 +146,12 @@ def _faithfulness(
     # Split answer into sentences
     sentences = _split_sentences(answer)
 
-    if not sentences or not chunk_texts:
+    if not sentences or len(chunk_embs) == 0:
         return 100.0, 0, 0  # No sentences to check
 
     # Embed all sentences
     sent_embeddings = embeddings_model.embed_documents(sentences)
-    chunk_embeddings = embeddings_model.embed_documents(chunk_texts)
-
     sent_embs = np.array(sent_embeddings)
-    chunk_embs = np.array(chunk_embeddings)
 
     # For each sentence, compute max similarity to any chunk
     faithful_count = 0

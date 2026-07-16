@@ -207,9 +207,13 @@ async def upload_document(
         session.bm25_store = bm25
         session.doc_metadata = meta
         session.doc_chunks = chunks
-        session.raw_text = raw_text
         session.doc_hash = file_hash(file_bytes)
         session.use_pinecone = _use_pinecone()
+        
+        # Free memory immediately
+        import gc
+        del raw_text
+        gc.collect()
 
         return UploadResponse(
             session_id=session_id, status="success", metadata=meta,
@@ -245,9 +249,13 @@ async def upload_url_endpoint(req: URLUploadRequest):
         session.bm25_store = bm25
         session.doc_metadata = meta
         session.doc_chunks = chunks
-        session.raw_text = raw_text
         session.doc_hash = file_hash(req.url.encode())
         session.use_pinecone = _use_pinecone()
+
+        # Free memory immediately
+        import gc
+        del raw_text
+        gc.collect()
 
         return UploadResponse(
             session_id=session_id, status="success", metadata=meta,

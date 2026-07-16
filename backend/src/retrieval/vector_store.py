@@ -37,8 +37,25 @@ def build_vector_store(docs: list[Document]) -> FAISS:
     Returns:
         FAISS vector store ready for similarity search.
     """
+    import gc
+
     embeddings = get_embeddings()
-    return FAISS.from_documents(docs, embeddings)
+    
+    # Process in batches to keep peak RAM low
+    batch_size = 50
+    vector_store = None
+    
+    for i in range(0, len(docs), batch_size):
+        batch_docs = docs[i : i + batch_size]
+        if vector_store is None:
+            vector_store = FAISS.from_documents(batch_docs, embeddings)
+        else:
+            vector_store.add_documents(batch_docs)
+            
+        # Force garbage collection of intermediate tensors
+        gc.collect()
+
+    return vector_store
 
 
 def dense_search(vectorstore: FAISS, query: str, k: int = 10) -> list[Document]:

@@ -65,27 +65,37 @@ def upsert_to_pinecone(docs: list[Document], namespace: str, api_key: str = None
     index = get_pinecone_index(api_key)
     embed_model = get_embeddings()
 
-    texts = [d.page_content for d in docs]
-    embeddings = embed_model.embed_documents(texts)
+    import gc
+    batch_size = 50
 
-    # Build upsert vectors with metadata
-    vectors = []
-    for i, (doc, emb) in enumerate(zip(docs, embeddings)):
-        vectors.append({
-            "id": f"{namespace}-{i}",
-            "values": emb,
-            "metadata": {
-                "text": doc.page_content[:1000],  # Pinecone metadata limit
-                "chunk_index": doc.metadata.get("chunk_index", i),
-                "source": doc.metadata.get("source", ""),
-                "page": str(doc.metadata.get("page", "")),
-            },
-        })
-
-    # Upsert in batches of 100
-    for batch_start in range(0, len(vectors), 100):
-        batch = vectors[batch_start : batch_start + 100]
-        index.upsert(vectors=batch, namespace=namespace)
+    for batch_start in range(0, len(docs), batch_size):
+        batch_docs = docs[batch_start : batch_start + batch_size]
+        texts = [d.page_content for d in batch_docs]
+        
+        # Only embed this small batch
+        embeddings = embed_model.embed_documents(texts)
+        
+        # Build upsert vectors
+        vectors = []
+        for i, (doc, emb) in enumerate(zip(batch_docs, embeddings)):
+            global_index = batch_start + i
+            vectors.append({
+                "id": f"{namespace}-{global_index}",
+                "values": emb,
+                "metadata": {
+                    "text": doc.page_content[:1000],  # Pinecone metadata limit
+                    "chunk_index": doc.metadata.get("chunk_index", global_index),
+                    "source": doc.metadata.get("source", ""),
+                    "page": str(doc.metadata.get("page", "")),
+                },
+            })
+            
+        # Upsert the batch
+        index.upsert(vectors=vectors, namespace=namespace)
+        
+        # Free memory before next batch
+        del texts, embeddings, vectors
+        gc.collect()
 
 
 def pinecone_search(

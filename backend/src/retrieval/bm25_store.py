@@ -40,15 +40,13 @@ class BM25Store:
 
         # ── Tokenize each chunk into lowercase words ────────────────────
         # BM25 works on word tokens, not embeddings.
-        # Simple whitespace + lowercase tokenization is sufficient.
-        self.tokenized = [
-            doc.page_content.lower().split() for doc in docs
-        ]
+        tokenized = [doc.page_content.lower().split() for doc in docs]
 
         # ── Build BM25 index ────────────────────────────────────────────
-        # BM25Okapi is the standard variant used in search engines.
-        # It considers term frequency, document length, and corpus statistics.
-        self.bm25 = BM25Okapi(self.tokenized)
+        self.bm25 = BM25Okapi(tokenized)
+        
+        # Free the tokenized text list immediately to save RAM
+        del tokenized
 
     def search(self, query: str, k: int = 10) -> list[Document]:
         """
